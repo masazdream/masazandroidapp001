@@ -12,6 +12,7 @@
     
     <application
         android:icon="@drawable/ic_launcher"
+        android:theme="@android:style/Theme.NoTitleBar"
         android:label="@string/app_display_name" >
         <activity
             android:name=".EventCalendarActivity"
