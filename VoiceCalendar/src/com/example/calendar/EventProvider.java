@@ -11,7 +11,8 @@ import android.net.Uri;
 public class EventProvider extends ContentProvider {
 	private EventDatabaseHelper mEventDatabaseHelper = null;
 	//private static final int CURRENT_DATABASE_VERSION = 1;
-	private static final int CURRENT_DATABASE_VERSION = 2;
+	//private static final int CURRENT_DATABASE_VERSION = 2;
+	private static final int CURRENT_DATABASE_VERSION = 3;
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -69,8 +70,8 @@ public class EventProvider extends ContentProvider {
 			String sql = "CREATE TABLE " + EventInfo.DB_NAME + "("
 					+ EventInfo.ID + " INTEGER PRIMARY KEY," + EventInfo.TITLE
 					+ " TEXT," + EventInfo.CONTENT + " TEXt," + EventInfo.WHERE
-					+ " TEXT," + EventInfo.END_TIME + " TEXT,"
-					+ EventInfo.START_TIME + " TEXT,"
+					+ " TEXT," + EventInfo.START_TIME + " TEXT,"
+					+ EventInfo.END_TIME + " TEXT,"
 					+ EventInfo.RECORDING_FILE + " TEXT" + ");";
 			db.execSQL(sql);
 		}
