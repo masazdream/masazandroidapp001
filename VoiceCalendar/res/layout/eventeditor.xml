@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+   	<LinearLayout
+   	    android:id="@+id/linearLayout1"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content" >
+
+	    <TextView
+	        android:id="@+id/textView3"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/title"
+	    	android:textSize="24sp" />
+	    <EditText
+	        android:id="@+id/title"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
+	    </EditText>
+    </LinearLayout>
+
+   	<TableLayout
+   	    android:id="@+id/tableLayout1"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content" >
+
+   	    <TableRow
+   	        android:id="@+id/tableRow1"
+   	        android:layout_width="wrap_content"
+   	        android:layout_height="wrap_content" >
+   	        <TextView android:text="@string/startTime"
+   	            android:layout_height="wrap_content"
+   	            android:layout_width="wrap_content"
+   	            android:id="@+id/TextView01"
+   	            android:textSize="24sp">
+   	        </TextView>
+   	        <TextView android:text="TextView"
+   	            android:layout_height="wrap_content"
+   	            android:layout_width="wrap_content"
+   	            android:id="@+id/startDate"
+   	            android:textSize="24sp">
+   	        </TextView>
+   	        <TextView android:text="TextView"
+   	            android:layout_height="wrap_content"
+   	            android:layout_width="wrap_content"
+   	            android:id="@+id/startTime"
+   	            android:textSize="24sp">
+   	        </TextView>
+   	    </TableRow>
+
+   	    <TableRow
+   	        android:id="@+id/tableRow2"
+   	        android:layout_width="wrap_content"
+   	        android:layout_height="wrap_content" >
+   	        <TextView android:text="@string/endTime"
+   	            android:layout_height="wrap_content"
+   	            android:layout_width="wrap_content"
+   	            android:id="@+id/TextView02"
+   	            android:textSize="24sp">
+   	        </TextView>
+   	        <TextView android:text="TextView"
+   	            android:layout_height="wrap_content"
+   	            android:layout_width="wrap_content"
+   	            android:id="@+id/endDate"
+   	            android:textSize="24sp">
+   	        </TextView>
+   	        <TextView android:text="TextView"
+   	            android:layout_height="wrap_content"
+   	            android:layout_width="wrap_content"
+   	            android:id="@+id/endTime"
+   	            android:textSize="24sp">
+   	        </TextView>
+   	    </TableRow>
+   	</TableLayout>
+
+   	<CheckBox
+   	    android:text="@string/allday"
+   	    android:id="@+id/allDay"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:textSize="24sp"
+   	    android:checked="false" />
+
+   	<TextView
+   	    android:text="@string/place"
+   	    android:id="@+id/textView1"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:textSize="24sp" />
+   	<EditText
+   	    android:id="@+id/where"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content">
+	</EditText>
+
+   	<TextView
+   	    android:id="@+id/textView2"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:text="@string/content"
+   	    android:textSize="24sp"/>
+
+   	<EditText
+   	    android:id="@+id/content"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content"
+   	    android:layout_weight="1"
+   	    android:gravity="top">
+   	</EditText>
+
+   	<Button
+   	    android:id="@+id/recording"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content"
+   	    android:text="@string/recording" />
+
+	<RelativeLayout android:id="@+id/relativeLayout1"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	   	<Button
+	   	    android:id="@+id/discard"
+	   	    android:layout_width="wrap_content"
+	   	    android:layout_height="wrap_content"
+	   	    android:text="@string/discard"
+	   	    android:layout_alignParentLeft="true" />
+	   	<Button
+	   	    android:id="@+id/save"
+	   	    android:layout_alignParentTop="true"
+	   	    android:layout_width="wrap_content"
+	   	    android:layout_height="wrap_content"
+	   	    android:text="@string/save"
+	   	    android:layout_alignParentRight="true"/>
+   	</RelativeLayout>
+</LinearLayout>

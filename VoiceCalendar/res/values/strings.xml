@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, EventCalendarActivity!</string>
+    <string name="app_name">EventCalendar</string>
+    <string name="app_display_name">VoiceCalendar</string>
+    <string name="prevMonth">prevMonth</string>
+    <string name="nextMonth">nextMonth</string>
+    <string name="sunday">Sun</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+	<string name="title">Title</string>
+	<string name="startTime">Start:</string>
+	<string name="endTime">End:</string>
+	<string name="allday">All day</string>
+	<string name="place">Place</string>
+	<string name="content">Content</string>
+	<string name="save">Save</string>
+	<string name="discard">Discard</string>
+	<string name="newEvent">New Recording!!</string>
+	<string name="play">Play</string>
+	<string name="stop">Stop</string>
+	<string name="edit">Edit</string>
+	<string name="recording">Recording</string>
+</resources>
