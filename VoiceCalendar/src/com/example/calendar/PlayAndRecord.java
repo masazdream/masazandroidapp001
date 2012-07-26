@@ -20,7 +20,7 @@ public class PlayAndRecord {
 	public static final String recording = "recording";
 	public static final String nowRecofing = "stop recording";
 
-	private final String sdcardpath = "sdcard";
+	public static final String sdcardpath = "sdcard";
 
 	private final MediaPlayer player = new MediaPlayer();
 	private final MediaRecorder recorder = new MediaRecorder();

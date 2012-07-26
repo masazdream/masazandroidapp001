@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -30,7 +33,7 @@ import android.database.Cursor;
  * @author masahiro
  * 
  */
-public class EventDetailActivity extends Activity {
+public class EventDetailActivity extends Activity implements OnItemLongClickListener{
 	private String mDateString = null;
 
 	// private ArrayList<Long> mEventIds = null;
@@ -44,6 +47,9 @@ public class EventDetailActivity extends Activity {
 	// 新規イベント追加メニュー用ID
 	private static final int NEW_EVENT_MENU_ID = 1;
 
+	// 削除Id
+	private long mDeleteId = 0;
+	
 	/**
 	 * タイトルの日付を表示
 	 */
@@ -60,25 +66,43 @@ public class EventDetailActivity extends Activity {
 
 		mEventListView = (ListView) findViewById(R.id.eventList);
 		setListAdapter();
+		mEventListView.setOnItemLongClickListener(this);
 
 		// eventListViewのアイテムをクリックされた時の処理をセット
+
 		/*
-		 * mEventListView .setOnItemClickListener(new
-		 * AdapterView.OnItemClickListener() {
-		 * 
-		 * @Override public void onItemClick(AdapterView<?> parent, View v, int
-		 * position, long id) { Intent intent = new
-		 * Intent(EventDetailActivity.this, EventEditorActivity.class);
-		 * 
-		 * // ArrayAdapterの型をEventInfoクラスにまとめる EventInfo event = (EventInfo)
-		 * parent.getAdapter() .getItem(position);
-		 * 
-		 * intent.putExtra(EventInfo.ID, mEventIds.get(position));
-		 * intent.putExtra(EventInfo.ID, event.getId());
-		 * 
-		 * intent.putExtra("date", mDateString); startActivityForResult(intent,
-		 * EVENT_EDITOR); } });
-		 */
+		mEventListView
+				.setOnItemLongClickListener(new AdapterView.OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int arg2, long arg3) {
+						// TODO Auto-generated method stub
+						
+					}
+					*/
+
+					/*
+					@Override
+					public void onItemClick(AdapterView<?> parent, View v,
+							int position, long id) {
+						Intent intent = new Intent(EventDetailActivity.this,
+								EventEditorActivity.class);
+
+						// ArrayAdapterの型をEventInfoクラスにまとめる EventInfo event =
+						// (EventInfo)
+						parent.getAdapter().getItem(position);
+
+						//intent.putExtra(EventInfo.ID, mEventIds.get(position));
+						//intent.putExtra(EventInfo.ID, event.getId());
+
+						intent.putExtra("date", mDateString);
+						startActivityForResult(intent, EVENT_EDITOR);
+					}
+
+				});
+				*/
+
 	}
 
 	private void setListAdapter() {
@@ -120,7 +144,8 @@ public class EventDetailActivity extends Activity {
 			event.setEnd(c.getString(c.getColumnIndex(EventInfo.END_TIME)));
 			event.setWhere(c.getString(c.getColumnIndex(EventInfo.WHERE)));
 			event.setContent(c.getString(c.getColumnIndex(EventInfo.CONTENT)));
-			event.setRecordingFile(c.getString(c.getColumnIndex(EventInfo.RECORDING_FILE)));
+			event.setRecordingFile(c.getString(c
+					.getColumnIndex(EventInfo.RECORDING_FILE)));
 			events.add(event);
 		}
 		c.close();
@@ -204,25 +229,26 @@ public class EventDetailActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					/*
-					Intent intent = new Intent(EventDetailActivity.this,
-							EventEditorActivity.class);
-					intent.putExtra(EventInfo.ID, item.getId());
-
-					intent.putExtra("date", mDateString);
-					startActivityForResult(intent, EVENT_EDITOR);
-					*/
+					 * Intent intent = new Intent(EventDetailActivity.this,
+					 * EventEditorActivity.class); intent.putExtra(EventInfo.ID,
+					 * item.getId());
+					 * 
+					 * intent.putExtra("date", mDateString);
+					 * startActivityForResult(intent, EVENT_EDITOR);
+					 */
 					// テスト用のファイルパス
 					String sdcardpath = "sdcard";
 					String fileName = item.getRecordingFile();
-					String testPath = File.separator + sdcardpath + File.separator + fileName;
-					if(!mPlayAndRecord.getStates()){
+					String testPath = File.separator + sdcardpath
+							+ File.separator + fileName;
+					if (!mPlayAndRecord.getStates()) {
 						mPlayAndRecord.play(testPath);
 						message("Start Play");
-						((Button)v).setText(PlayAndRecord.stop);
-					}else{
+						((Button) v).setText(PlayAndRecord.stop);
+					} else {
 						mPlayAndRecord.stop(testPath);
 						message("Stop Play");
-						((Button)v).setText(PlayAndRecord.play);
+						((Button) v).setText(PlayAndRecord.play);
 					}
 
 				}
@@ -233,5 +259,57 @@ public class EventDetailActivity extends Activity {
 
 	private void message(String text) {
 		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
+			long id) {
+		EventInfo item = (EventInfo)parent.getAdapter().getItem(position);
+		mDeleteId = item.getId();
+		
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		
+		alertDialogBuilder.setTitle(R.string.deleteConfirm);
+		
+		alertDialogBuilder.setPositiveButton(R.string.deleteOK, new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				ContentResolver contentResolver = getContentResolver();
+				String selection = EventInfo.ID+" = "+mDeleteId;
+				Cursor c = contentResolver.query(
+						EventCalendarActivity.mResolverUri, null, selection, null,
+						null);
+
+				if (c.moveToNext()) {
+					String fileName = c.getString(c.getColumnIndex(EventInfo.RECORDING_FILE));
+					String path = File.separator + PlayAndRecord.sdcardpath + File.separator
+							+ fileName;
+					
+					File deleteFile = new File(path);
+					deleteFile.delete();
+				}
+				
+				contentResolver.delete(EventCalendarActivity.mResolverUri, selection, null);
+				setListAdapter();
+				
+				Intent intent = new Intent();
+				intent.putExtra(EventCalendarActivity.CHANGED, true);
+				setResult(RESULT_OK, intent);
+			}
+		});
+		
+		alertDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// Cancelの場合は何もしない
+			}
+		});
+
+		alertDialogBuilder.setCancelable(true);
+		
+		AlertDialog alertDialog = alertDialogBuilder.create();
+		
+		alertDialog.show();
+		return true;
 	}
 }

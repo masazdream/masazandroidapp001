@@ -26,4 +26,7 @@
 	<string name="stop">Stop</string>
 	<string name="edit">Edit</string>
 	<string name="recording">Recording</string>
+	<string name="deleteConfirm">Delete OK?</string>
+	<string name="deleteOK">Delete</string>
+	<string name="cancel">Cancel</string>
 </resources>
