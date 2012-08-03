@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -17,10 +18,12 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 
 /**
  * カレンダー表示用アクティビティクラス
@@ -52,6 +55,15 @@ public class EventCalendarActivity extends Activity implements OnClickListener {
 	// EventDetailActivityを呼び出すためのrequestコード
 	protected static final int EVENT_DETAIL = 2;
 
+	// X位置の動作判断
+	private static float MARGIN_X = 15.0f;
+	// Y位置の動作判断
+	private static float MARGIN_Y = 15.0f;
+	// 触れた瞬間のX位置
+	private float mDownX;
+	// 触れた瞬間のY位置
+	private float mDownY;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -83,6 +95,32 @@ public class EventCalendarActivity extends Activity implements OnClickListener {
 				startActivityForResult(intent, EVENT_DETAIL);
 			}
 		});
+		
+		mGridView.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				int action = event.getAction();
+			    switch(action){
+			    case MotionEvent.ACTION_UP: // 離れた
+			    	actionUp(event);
+			        break;
+			    case MotionEvent.ACTION_DOWN: // 触れた
+			    	actionDown(event);
+			        break;
+			    case MotionEvent.ACTION_MOVE: // 動いた
+			        //actionMove(event);
+			        break;
+			    case MotionEvent.ACTION_CANCEL: // ?よくわかりません
+			        break;
+			    case MotionEvent.ACTION_OUTSIDE: // 範囲外に移動
+			        break;
+			    }
+			    //return super.onTouchEvent(event);
+			    //ここで画面を動かすという判断の場合は、trueを返す。
+			    //画面を動かさない場合には、falseを返す。するとonItemClickメソッドへと移る
+				return false;
+			}
+		});
 
 		// 年月を表示するTextViewを取得
 		mYearMonthTextView = (TextView) findViewById(R.id.yearMonth);
@@ -92,6 +130,7 @@ public class EventCalendarActivity extends Activity implements OnClickListener {
 		// 日本では月を数字の1で表すため、基底の0に1を足しておく
 		int month = mCalendar.get(Calendar.MONTH) + 1;
 		mYearMonthTextView.setText(year + "/" + month);
+		mYearMonthTextView.setTypeface(Typeface.create(Typeface.SERIF, Typeface.BOLD));
 
 		// コンテントリゾルバの初期化
 		mContentResolver = getContentResolver();
@@ -235,5 +274,113 @@ public class EventCalendarActivity extends Activity implements OnClickListener {
 				mDateCellAdapter.notifyDataSetChanged();
 			}
 		}
+	}
+/*
+    public boolean onInterceptTouchEvent(MotionEvent event)  {
+        // タッチされたらまずonInterceptTouchEventが呼ばれる
+        // ここでtrueを返せば親ViewのonTouchEvent
+        // ここでfalseを返せば子ViewのonClickやらonLongClickやら
+         
+        return false;
+    }
+    */
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+	    int action = event.getAction();
+	    switch(action){
+	    case MotionEvent.ACTION_UP: // 離れた
+	        break;
+	    case MotionEvent.ACTION_DOWN: // 触れた
+	        break;
+	    case MotionEvent.ACTION_MOVE: // 動いた
+	        actionMove(event);
+	        break;
+	    case MotionEvent.ACTION_CANCEL: // ?よくわかりません
+	        break;
+	    case MotionEvent.ACTION_OUTSIDE: // 範囲外に移動
+	        break;
+	    }
+	    return super.onTouchEvent(event);
+	}
+
+	private void actionDown(MotionEvent event){
+	    // 位置を保存
+	    mDownX = event.getX();
+	    mDownY = event.getY();
+	    // テスト用にイベントの情報を画面に表示
+	    //TextView tv = (TextView)findViewById(R.id.TextView01);
+	    /*
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("\n");
+	    sb.append("action[");
+	    sb.append(event.getAction());
+	    sb.append("] time[");
+	    sb.append(event.getEventTime());
+	    sb.append("] (x,y)=(");
+	    sb.append(mDownX);
+	    sb.append(",");
+	    sb.append(mDownY);
+	    sb.append(")");
+	    //tv.setText(sb.substring(0));
+	    Toast.makeText(this, sb.toString(), Toast.LENGTH_SHORT).show();
+	    */
+	}    
+
+	private void actionUp(MotionEvent event){
+	    // 現在位置と ACTION_DOWN 時の位置を比較
+	    float moveX = Math.abs(mDownX - event.getX());
+	    float moveY = Math.abs(mDownY - event.getY());
+	    // 移動距離が範囲内なら無視
+	    if(moveX < MARGIN_X && moveY < MARGIN_Y){
+	        return;
+	    }
+	    // テスト用にイベントの情報を画面に表示
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("\n");
+	    sb.append("action[");
+	    sb.append(event.getAction());
+	    sb.append("] time[");
+	    sb.append(event.getEventTime());
+	    sb.append("] (x,y)=(");
+	    sb.append(event.getX());
+	    sb.append(",");
+	    sb.append(event.getY());
+	    sb.append(")");
+	    
+	    Toast.makeText(this, sb.toString(), Toast.LENGTH_SHORT).show();
+	}
+	
+	/**
+	 * DOWNとUP時の座標比較のみで十分なので使用しない
+	 * 
+	 * @param event
+	 */
+	private void actionMove(MotionEvent event){
+		   // 現在位置と ACTION_DOWN 時の位置を比較
+	    float moveX = Math.abs(mDownX - event.getX());
+	    float moveY = Math.abs(mDownY - event.getY());
+
+	    // 移動距離が範囲内なら無視
+	    if(moveX < MARGIN_X && moveY < MARGIN_Y){
+	       return;
+	    }
+
+	    // テスト用にイベントの情報を画面に表示
+	    //TextView tv = (TextView)findViewById(R.id.TextView01);
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("\n");
+	    sb.append("action[");
+	    sb.append(event.getAction());
+	    sb.append("] time[");
+	    sb.append(event.getEventTime());
+	    sb.append("] (x,y)=(");
+	    sb.append(event.getX());
+	    sb.append(",");
+	    sb.append(event.getY());
+	    sb.append(")");
+	    //tv.setText(sb.substring(0));
+	    
+	    Toast.makeText(this, sb.toString(), Toast.LENGTH_SHORT).show();
 	}
 }

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -311,5 +312,43 @@ public class EventDetailActivity extends Activity implements OnItemLongClickList
 		
 		alertDialog.show();
 		return true;
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+	    int action = event.getAction();
+	    switch(action){
+	    case MotionEvent.ACTION_UP: // 離れた
+	        break;
+	    case MotionEvent.ACTION_DOWN: // 触れた
+	        break;
+	    case MotionEvent.ACTION_MOVE: // 動いた
+	        actionMove(event);
+	        break;
+	    case MotionEvent.ACTION_CANCEL: // ?よくわかりません
+	        break;
+	    case MotionEvent.ACTION_OUTSIDE: // 範囲外に移動
+	        break;
+	    }
+	    return super.onTouchEvent(event);
+	}
+
+	private void actionMove(MotionEvent event){
+	    // テスト用にイベントの情報を画面に表示
+	    //TextView tv = (TextView)findViewById(R.id.TextView01);
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("\n");
+	    sb.append("action[");
+	    sb.append(event.getAction());
+	    sb.append("] time[");
+	    sb.append(event.getEventTime());
+	    sb.append("] (x,y)=(");
+	    sb.append(event.getX());
+	    sb.append(",");
+	    sb.append(event.getY());
+	    sb.append(")");
+	    //tv.setText(sb.substring(0));
+	    
+	    Toast.makeText(this, sb.toString(), Toast.LENGTH_SHORT).show();
 	}
 }
